@@ -3,7 +3,6 @@
 import argparse
 
 import mlx.core as mx
-import numpy as np
 from PIL import Image
 from tqdm import tqdm
 
@@ -53,5 +52,5 @@ if __name__ == "__main__":
     x = (x * 255).astype(mx.uint8)
 
     # Save them to disc
-    im = Image.fromarray(np.array(x))
+    im = Image.fromarray(x.__array__())
     im.save(args.output)
