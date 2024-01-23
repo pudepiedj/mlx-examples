@@ -182,26 +182,6 @@ options:
   -o OUTPUT, --output OUTPUT
                         base.ext filename for outputs
   -pp, --print_parser   print the argument Namespace at inception
-  -ro, --right_only     only show the right-hand denoising layers
-  -ft, --full_triangle  create a full pyramidal display from left to right
-(base) edsilm2@JCPM2 mlx-examples %
-(base) edsilm2@JCPM2 mlx-examples % python3 stable_diffusion/TriangularArray.py -h
-usage: TriangularArray.py [-h] [--total TOTAL] [-o OUTPUT] [-pp] [-ro] [-ft]
-                          seed_image target_image
-
-Generate arrays of images from a set of SD-generated images. If the original image is much larger
-than [512,512], there may be resource issues.
-
-positional arguments:
-  seed_image            original image used as the basis for the noising; used to size images
-  target_image          the final image used in final display
-
-options:
-  -h, --help            show this help message and exit
-  --total TOTAL         total number of images to process; 10 rows of 10 require 55
-  -o OUTPUT, --output OUTPUT
-                        base.ext filename for outputs
-  -pp, --print_parser   print the argument Namespace at inception
   -ro, --right_only     only show the right-hand (denoising) layers
   -ft, --full_triangle  create a full pyramidal (noising and denoising) display
   ```
