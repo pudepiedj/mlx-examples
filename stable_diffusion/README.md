@@ -160,8 +160,8 @@ There are constraints on the image sizes that can be processed on an `M2 MAX 32G
 
 `--save_last_N` is a utility to save the last consecutive `N` images before the final image for any value of `--strength`. Motivation: sometimes the final image is very smooth and may be thought less attractive; the option of seeing the final `N` images allows others to be chosen.
 
-`TriangularArray.py`
------------------------------------
+TriangularArray.py
+------------------
 `TriangularArray.py` needs some command-line parameters to specify the format of source file as well as some control over the number of rows, format of the final image, and so forth.
 
 At the moment it accepts these arguments:
