@@ -15,8 +15,8 @@ def parser():
     parser.add_argument("--total", type=int, default=55, help = "total number of images to process; 10 rows of 10 require 55")
     parser.add_argument("-o", "--output", default="out.png", help = "base.ext filename for outputs")
     parser.add_argument("-pp", "--print_parser", action="store_true", default = False, help = "print the argument Namespace at inception")
-    parser.add_argument("-ro", "--right_only", action="store_true", default = False, help = "only show the right-hand denoising layers")
-    parser.add_argument("-ft", "--full_triangle", action="store_true", default = False, help = "create a full pyramidal display from left to right")
+    parser.add_argument("-ro", "--right_only", action="store_true", default = False, help = "only show the right-hand (denoising) layers")
+    parser.add_argument("-ft", "--full_triangle", action="store_true", default = False, help = "create a full pyramidal (noising and denoising) display")
     args = parser.parse_args()
 
     if args.print_parser:
@@ -119,7 +119,8 @@ if __name__ == "__main__":
                 y = (rows+col-2)*size_w
                 #print(f"(x, y) = ({y},{x})")
                 canvas.paste(img, (y,x))
-                img = Image.open(args.seed_image)
+                # use the first strength=0.1 image as the source image
+                img = Image.open(f"{target_name}_20_20.png")
                 img = img.resize((5*size_w, 5*size_h))
                 canvas.paste(img, (0,0))
                 img = Image.open(f"{args.target_image}")

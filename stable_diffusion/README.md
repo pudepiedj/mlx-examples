@@ -186,4 +186,4 @@ options:
   -ft, --full_triangle  create a full pyramidal (noising and denoising) display
   ```
 
-TODO: The relationship between seed, generated and saved images is not right; it just needs a bit more time.
+TODO: The relationship between seed, generated and saved images is not right; it just needs a bit more time. In fact we can just use one source image, generate the targets using its filename, and regenerate the seed image from the first (smallest strength), so saving a long pathname in the command prompt. Not yet implemented but almost.
