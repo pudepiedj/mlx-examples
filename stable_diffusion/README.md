@@ -123,6 +123,6 @@ Extensions
 
 This PR adds some functionality to the command-line by augmenting the parser as can be found from the images2images.py --help
 
-Specifically it allows the use of `-pp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array formay below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_200_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention) to create an image such as this:
+Specifically it allows the use of `-pp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array format below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_200_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention) to create an image such as this:
 
-![image2image](testimageSTRENGTHNew2_80_60.png)
+![image2image](tpyramind_pattern6 github.png)
