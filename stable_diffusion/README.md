@@ -6,7 +6,7 @@ Stable Diffusion in MLX. The implementation was ported from Hugging Face's
 and using the weights available on the Hugging Face Hub by Stability AI at
 [stabilitiai/stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1).
 
-![out](generated-mlx.png)    
+![out](generated-mlx.png)
 *Image generated using Stable Diffusion in MLX and the prompt 'A big red sign saying MLX in capital letters.'*
 
 Installation
@@ -71,7 +71,7 @@ to the forward diffusion process and the `strength` parameter. A `strength` of
 0.0 means no noise and a `strength` of 1.0 means starting from completely
 random noise.
 
-![image2image](im2im.png)    
+![image2image](im2im.png)
 *Generations with varying strength using the original image and the prompt 'A lit fireplace'.*
 
 The command to generate the above images is:
@@ -117,3 +117,12 @@ double the images processed by the UNet.
 Note that the above table means that it takes about 90 seconds to fully
 generate 16 images with MLX and 50 diffusion steps with classifier free
 guidance and about 120 for PyTorch.
+
+Extensions
+----------
+
+This PR adds some functionality to the command-line by augmenting the parser as can be found from the images2images.py --help
+
+Specifically it allows the use of `-pp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array formay below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_200_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention) to create an image such as this:
+
+![image2image](testimageSTRENGTHNew2_80_60.png)

@@ -36,7 +36,7 @@ def save_image(x, args):
 
     #print(f"Metadata saved prompt is {new_im.info['Prompt']}")
 
-def save_interim_image(x, count, args):
+def save_interim_image(x, limit, count, args):
     # Save them to disc
     im = Image.fromarray(np.array(x))      # Converting the 'mlx.core.array' object to a NumPy array before passing to Image.fromarray
 
@@ -50,7 +50,7 @@ def save_interim_image(x, count, args):
     file_name = args.output.split('.')[0]
     file_ext = args.output.split('.')[-1]
 
-    interim_file = f"{file_name}_{str(count)}.{file_ext}"
+    interim_file = f"{file_name}_{str(limit)}_{str(count)}.{file_ext}"
     im.save(interim_file, pnginfo=metadata)
     print(f"image saved to file {interim_file}")
 
@@ -146,8 +146,8 @@ def decode_to_images(x_t, args):
 
     return x
 
-if __name__ == "__main__":
-
+def parser():
+    # note the use of `action="store_true"` to define the default when just `-gt` etc are entered.
     parser = argparse.ArgumentParser(
         description="Generate images from an image and a textual prompt using stable diffusion." \
         " If the original image is larger than [512,512], the number of final images may need to be reduced to 8 or fewer." \
@@ -167,12 +167,22 @@ if __name__ == "__main__":
     parser.add_argument("--decoding_batch_size", type=int, default=1)
     parser.add_argument("-o", "--output", default="out.png", help = "base.ext filename for outputs")
     parser.add_argument("-sd", "--show_denoising", type=int, default = 999, help = "show denoising images every N iterations")
-    parser.add_argument("-sp", "--save_prompt", type=bool, default = False, help = "save the main test-prompt as metadata")
+    parser.add_argument("-sp", "--save_prompt", action="store_true", default = False, help = "save the main test-prompt as metadata")
     parser.add_argument("--save_last_N", type=int, default = 1, help = "save all the last N consecutive sets of images")
+    parser.add_argument("-pp", "--print_parser", action="store_true", default = False, help = "print the argument Namespace at inception")
+    parser.add_argument("-gt", "--generate_triangle", action="store_true", default = False, help = "create a triangular display of progressive strength")
     args = parser.parse_args()
-    print(args)
+
+    if args.print_parser:
+        print(args)
+
+    return args
+
+if __name__ == "__main__":
 
     sd = StableDiffusion()
+
+    args = parser()
 
     # Read the image
     img = mx.array(np.array(Image.open(args.image)))
@@ -182,25 +192,40 @@ if __name__ == "__main__":
     img = reshape_image(img)
     print(f"Reshaped original image now {img.shape}")
 
-    # Noise and denoise the latents produced by encoding img.
-    latents = sd.generate_latents_from_image(
-        img,
-        args.prompt,
-        strength=args.strength,
-        n_images=args.n_images,
-        cfg_weight=args.cfg,
-        num_steps=args.steps,
-        negative_text=args.negative_prompt,
-    )
-    count = 0
-    for x_t in tqdm(latents, total=int(args.steps * args.strength)):
-        count += 1
-        mx.simplify(x_t)
-        mx.simplify(x_t)
-        mx.eval(x_t)
-        if ((count % args.show_denoising == 0) or ((args.save_last_N != 1) and ((args.steps * args.strength - count) < args.save_last_N))):
-            x = decode_to_images(x_t, args)
-            save_interim_image(x, count, args)
+    # experimental triangular display generator
+    if args.generate_triangle:
+        # define the strength loop values
+        strength_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    else:
+        # use the strength as defined in args
+        strength_list = [args.strength]
 
-    x = decode_to_images(x_t, args)
-    save_image(x, args)
+    for args.strength in strength_list:
+    # Noise to produce the latents by encoding img.
+    # This sd. function is in stable_diffusion/__init__.py
+        latents = sd.generate_latents_from_image(
+            img,
+            args.prompt,
+            strength=args.strength,
+            n_images=args.n_images,
+            cfg_weight=args.cfg,
+            num_steps=args.steps,
+            negative_text=args.negative_prompt,
+        )
+        # Denoise the latents to produce new images
+        # By the time we get here all the noising is finished
+
+        count = 0
+        limit = int(args.steps * args.strength)
+        for x_t in tqdm(latents, total=limit):
+            count += 1
+            mx.simplify(x_t)
+            mx.simplify(x_t)
+            mx.eval(x_t)
+            if ((count % args.show_denoising == 0) or ((args.save_last_N != 1) and ((limit - count) < args.save_last_N))):
+                x = decode_to_images(x_t, args)
+                save_interim_image(x, limit, count, args)
+
+        x = decode_to_images(x_t, args)
+        save_image(x, args)
+
