@@ -127,4 +127,4 @@ Specifically it allows the use of `-pp` to save the text-prompt as metadata with
 
 ![image2image](./images2images/tpyramind_pattern6 github.png)
 
-There are significant constraints on the image sizes that can be processed on an M2 MAX 32GB and although rectangular images on low numbers of steps are possible, the ideal size and shape to do a large number of steps up to around `--steps 200` appears to be `[512, 512, 3]` although upsizing larger images is possible.
+There are significant constraints on the image sizes that can be processed on an M2 MAX 32GB and although large rectangular images on low numbers of steps are possible, the ideal size and shape to do a large number of steps up to around `--steps 200` appears to be `[512, 512, 3]` although larger images do work sometimes.
