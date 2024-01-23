@@ -7,6 +7,7 @@ and using the weights available on the Hugging Face Hub by Stability AI at
 [stabilitiai/stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1).
 
 ![out](generated-mlx.png)
+
 *Image generated using Stable Diffusion in MLX and the prompt 'A big red sign saying MLX in capital letters.'*
 
 Installation
@@ -150,6 +151,8 @@ options:
 Specifically it allows the use of `-pp` to display the args parser parameters at inception; `-sp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array format below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_80_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention until all the image-file parsing is defined) to create an image such as this with the seed image left and the final diffusion image right. Running along a row gives an impression of the way the noising and denoising evolve, although it appears from the `__init__.py`code that the `add_noise` is in practice done all at once; it's just done to a greater extent as the `--steps` and `--strength` values rise to take us deeper and deeper into the latent space (if I haver understood this correctly):
 
 ![triangular_diffusion_array](./images2images/tpyramid_pattern6_gh.png)
+
+*Images generated using progressive values of `--strength` from `0.1` to `1.0` in increments of `0.1` using Stable Diffusion in MLX and the prompt 'Idyllic country landscape. Impressionism. Style of Cezanne.' The idea was to visualise the way the noising takes the seed image (left) deeper into latent space and the denoising the retrieves the target image (right). Rows represent separate `--steps` and `--strength` settings generating total steps of [20, 40, ... 200] in the ten rows.*
 
 There are constraints on the image sizes that can be processed on an `M2 MAX 32GB` and although large rectangular images on low numbers of steps are possible, the ideal size and shape to do a large number of steps up to around `--steps 200` appears to be `[512, 512, 3]` although larger images do work sometimes.
 
