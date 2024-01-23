@@ -121,12 +121,36 @@ guidance and about 120 for PyTorch.
 Extensions
 ----------
 
-This PR adds some functionality to the command-line by augmenting the parser as can be found from the ```images2images.py --help```
+This WIP PR adds some functionality to the command-line by augmenting the parser as can be found from the ```images2images.py --help```:
+```
+options:
+  -h, --help            show this help message and exit
+  --strength STRENGTH   value in (0,1); larger means more variation in the output image
+  --n_images N_IMAGES   total number of images arranged in n_rows
+  --n_rows N_ROWS       the number of rows in the grid of final images
+  --steps STEPS         maximum number of steps N
+  --cfg CFG             configuration number N
+  --negative_prompt NEGATIVE_PROMPT
+                        things to avoid in the final images
+  --decoding_batch_size DECODING_BATCH_SIZE
+  -o OUTPUT, --output OUTPUT
+                        base.ext filename for outputs
+  -sd SHOW_DENOISING, --show_denoising SHOW_DENOISING
+                        show denoising images every N iterations
+  -sp SAVE_PROMPT, --save_prompt SAVE_PROMPT
+                        save the main test-prompt as metadata
+  --save_last_N SAVE_LAST_N
+                        save all the last N consecutive sets of images
+  -pp PRINT_PARSER, --print_parser PRINT_PARSER
+                        print the argument Namespace at inception
+  -gt GENERATE_TRIANGLE, --generate_triangle GENERATE_TRIANGLE
+                        create images for a triangular display of progressive strength
+```
 
-Specifically it allows the use of `-pp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array format below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_200_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention until all the image-file parsing is defined) to create an image such as this:
+Specifically it allows the use of `-pp` to display the args parser parameters at inception; `-sp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array format below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_80_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention until all the image-file parsing is defined) to create an image such as this with the seed image left and the final diffusion image right. Running along a row gives an impression of the way the noising and denoising evolve, although it appears from the `__init__.py`code that the `add_noise` is in practice done all at once; it's just done to a greater extent as the `--steps` and `--strength` values rise to take us deeper and deeper into the latent space (if I haver understood this correctly):
 
 ![triangular_diffusion_array](./images2images/tpyramid_pattern6_gh.png)
 
-There are constraints on the image sizes that can be processed on an M2 MAX 32GB and although large rectangular images on low numbers of steps are possible, the ideal size and shape to do a large number of steps up to around `--steps 200` appears to be `[512, 512, 3]` although larger images do work sometimes.
+There are constraints on the image sizes that can be processed on an `M2 MAX 32GB` and although large rectangular images on low numbers of steps are possible, the ideal size and shape to do a large number of steps up to around `--steps 200` appears to be `[512, 512, 3]` although larger images do work sometimes.
 
 `--save_last_N` is a utility to save the last consecutive `N` images before the final image for any value of `--strength`. Motivation: sometimes the final image is very smooth and may be thought less attractive; the option of seeing the final `N` images allows others to be chosen.
