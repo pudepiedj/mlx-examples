@@ -160,6 +160,30 @@ There are constraints on the image sizes that can be processed on an `M2 MAX 32G
 
 `--save_last_N` is a utility to save the last consecutive `N` images before the final image for any value of `--strength`. Motivation: sometimes the final image is very smooth and may be thought less attractive; the option of seeing the final `N` images allows others to be chosen.
 
-TODO: Document `TriangularArray.py`
+`TriangularArray.py`
 -----------------------------------
 `TriangularArray.py` needs some command-line parameters to specify the format of source file as well as some control over the number of rows, format of the final image, and so forth.
+
+At the moment it accepts these arguments:
+```
+usage: TriangularArray.py [-h] [--total TOTAL] [-o OUTPUT] [-pp] [-ro] [-ft]
+                          seed_image target_image
+
+Generate arrays of images from a set of SD-generated images. If the original image is much larger
+than [512,512], there may be resource issues.
+
+positional arguments:
+  seed_image            original image used as the basis for the noising; used to size images
+  target_image          the final image used in final display
+
+options:
+  -h, --help            show this help message and exit
+  --total TOTAL         total number of images to process; 10 rows of 10 require 55
+  -o OUTPUT, --output OUTPUT
+                        base.ext filename for outputs
+  -pp, --print_parser   print the argument Namespace at inception
+  -ro, --right_only     only show the right-hand denoising layers
+  -ft, --full_triangle  create a full pyramidal display from left to right
+  ```
+
+TODO: The relationship between seed, generated and saved images is not right; it just needs a bit more time.
