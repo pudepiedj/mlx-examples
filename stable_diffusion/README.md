@@ -125,8 +125,8 @@ This PR adds some functionality to the command-line by augmenting the parser as 
 
 Specifically it allows the use of `-pp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array format below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_200_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention until all the image-file parsing is defined) to create an image such as this:
 
-![triangular_diffusion_array](./images2images/tpyramind_pattern6_gh.png)
+![triangular_diffusion_array](./images2images/tpyramid_pattern6_gh.png)
 
 There are constraints on the image sizes that can be processed on an M2 MAX 32GB and although large rectangular images on low numbers of steps are possible, the ideal size and shape to do a large number of steps up to around `--steps 200` appears to be `[512, 512, 3]` although larger images do work sometimes.
 
-`--save_last_N` is a utility to save the last consecutive `N` images before the final image because sometimes the final image is very smooth and may be thought less attractive; the option of seeing the final `N` images allows others to be chosen.
+`--save_last_N` is a utility to save the last consecutive `N` images before the final image for any value of `--strength`. Motivation: sometimes the final image is very smooth and may be thought less attractive; the option of seeing the final `N` images allows others to be chosen.
