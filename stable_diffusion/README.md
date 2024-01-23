@@ -121,8 +121,10 @@ guidance and about 120 for PyTorch.
 Extensions
 ----------
 
-This PR adds some functionality to the command-line by augmenting the parser as can be found from the images2images.py --help
+This PR adds some functionality to the command-line by augmenting the parser as can be found from the ```images2images.py --help``
 
-Specifically it allows the use of `-pp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array format below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_200_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention) to create an image such as this:
+Specifically it allows the use of `-pp` to save the text-prompt as metadata with the file; `-gt` to generate the images necessary for the triangular array format below that illustrates the diffusion process from start to finish; `-sd N` to set the interval over which the intermediate noisy images are saved to separate files, for example with `--steps 80` and `-sd 20` the images will be saved with the default `args.output` as `output_80_20.png`, `output_200_40.png` etc which will be picked up by the helper script `TriangularArray.py` (WIP - still needs some manual intervention until all the image-file parsing is defined) to create an image such as this:
 
-![image2image](tpyramind_pattern6 github.png)
+![image2image](images2images/tpyramind_pattern6 github.png)
+
+There are significant constraints on the image sizes that can be processed on an M2 MAX 32GB and although rectangular images on low numbers of steps are possible, the ideal size and shape to do a large number of steps up to around `--steps 200` appears to be `[512, 512, 3]` although upsizing larger images is possible.
