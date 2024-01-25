@@ -194,8 +194,8 @@ if __name__ == "__main__":
 
     # experimental triangular display generator
     if args.generate_triangle:
-        # define the strength loop values
-        strength_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+        # define the strength loop values [added zero here, which forces better alignment]
+        strength_list = [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     else:
         # use the strength as defined in args
         strength_list = [args.strength]

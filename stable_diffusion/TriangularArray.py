@@ -1,5 +1,12 @@
 # Create triangular array of emergent images
 
+# We started by distinguishing the original (seed) image from the target image
+# but that proves unnecessary, for one of two reasons:
+#    (a) we can simply use the least strength image as approximately the original
+#    (b) we can increase the strength to 11 values starting from 0 and then the
+#        first image really is the original image.
+# What we have not yet done is arrange for the suffixes to be picked from the filenames
+
 from PIL import Image
 import argparse
 import re
@@ -10,13 +17,14 @@ def parser():
         description="Generate arrays of images from a set of SD-generated images." \
         " If the original image is much larger than [512,512], there may be resource issues."
     )
-    parser.add_argument("seed_image", help = "original image used as the basis for the noising; used to size images")
+    #parser.add_argument("seed_image", help = "original image used as the basis for the noising; used to size images")
     parser.add_argument("target_image", help = "the final image used in final display")
     parser.add_argument("--total", type=int, default=55, help = "total number of images to process; 10 rows of 10 require 55")
     parser.add_argument("-o", "--output", default="out.png", help = "base.ext filename for outputs")
     parser.add_argument("-pp", "--print_parser", action="store_true", default = False, help = "print the argument Namespace at inception")
     parser.add_argument("-ro", "--right_only", action="store_true", default = False, help = "only show the right-hand (denoising) layers")
     parser.add_argument("-ft", "--full_triangle", action="store_true", default = False, help = "create a full pyramidal (noising and denoising) display")
+    parser.add_argument("-sd", "--save_difference", type=int, default = 20, help = "the interval at which the images were saved during generation")
     args = parser.parse_args()
 
     if args.print_parser:
@@ -60,15 +68,16 @@ if __name__ == "__main__":
 
     total_images = args.total
 
-    img = Image.open(args.seed_image)
+    img = Image.open(args.target_image) # changed from seed
     size_w = img.size[0] # height of each image
     size_h = img.size[1] # width of each image
     print(f"height = {size_h}; width = {size_w}")
-    print(f"Source base image: {args.seed_image}")
+    print(f"Source base image: {args.target_image}") # changed from seed
     print(f"Target image: {args.target_image}")
     #input("\npress",)
+    gsd = args.save_difference  # the interval
 
-    base_name = args.seed_image.split('.')[0]
+    base_name = args.target_image.split('.')[0] # changed from seed
     print(f"base name = {base_name}")
     target_name = args.target_image.split('.')[0]
     print(f"Target name = {target_name}")
@@ -86,9 +95,9 @@ if __name__ == "__main__":
         rows = row_number(args.total)
         canvas = Image.new('RGB', (rows*size_w, rows*size_h), 'white')
 
-        for row in range(1, rows+1):
+        for row in range(1, rows + 1):
             for col in range(1, row+1):
-                filename = f"{base_name}_{row*20}_{col*20}.png"
+                filename = f"{base_name}_{row*gsd}_{col*gsd}.png"
                 print(f"right-only: {filename}")
                 img = Image.open(filename)
                 x = (row-1)*size_h
@@ -112,7 +121,7 @@ if __name__ == "__main__":
 
         for row in range(1, rows + 1):
             for col in range(1, row + 1):
-                filename = f"{base_name}_{row*20}_{col*20}.png"
+                filename = f"{base_name}_{row*gsd}_{col*gsd}.png"
                 print(f"full triangle: {filename}")
                 img = Image.open(filename)
                 x = (row-1)*size_h
@@ -120,17 +129,17 @@ if __name__ == "__main__":
                 #print(f"(x, y) = ({y},{x})")
                 canvas.paste(img, (y,x))
                 # use the first strength=0.1 image as the source image
-                img = Image.open(f"{target_name}_20_20.png")
+                img = Image.open(f"{target_name}_{gsd}_{gsd}.png")
                 img = img.resize((5*size_w, 5*size_h))
                 canvas.paste(img, (0,0))
                 img = Image.open(f"{args.target_image}")
                 img = img.resize((5*size_w, 5*size_h))
                 canvas.paste(img, ((2*rows-6)*size_w,0))
 
-        for col in range(1, rows +1):
-            for row in range(1, col + 1):
+        for col in range(1, rows + 1):
+            for row in range(1, col):
                 #print(f"(row, col) = ({row},{col})")
-                filename = f"{base_name}_{row*20}_{20}.png"
+                filename = f"{base_name}_{row*gsd}_{gsd}.png"
                 print(filename)
                 img = Image.open(filename)
                 x = (rows-col+row)*size_h
