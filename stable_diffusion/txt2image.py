@@ -1,5 +1,17 @@
 # Copyright © 2023 Apple Inc.
 
+import sys
+print(f"Python executable: {sys.executable}")
+print("\nPython path:")
+for p in sys.path:
+    print(p)
+
+try:
+    import mlx.core as mx
+    print(f"\nMLX found at: {mx.__file__}")
+except ImportError as e:
+    print(f"\nError importing MLX: {e}")
+
 import argparse
 
 import mlx.core as mx
@@ -34,8 +46,8 @@ if __name__ == "__main__":
         negative_text=args.negative_prompt,
     )
     for x_t in tqdm(latents, total=args.steps):
-        mx.simplify(x_t)
-        mx.simplify(x_t)
+        #mx.simplify(x_t)
+        #mx.simplify(x_t)
         mx.eval(x_t)
 
     # Decode them into images

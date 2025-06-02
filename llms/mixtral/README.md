@@ -39,7 +39,7 @@ cd $MIXTRAL_MODEL/ && \
   git lfs pull --include "tokenizer.model"
 ```
 
-Now from `mlx-exmaples/mixtral` convert and save the weights as NumPy arrays so
+Now from `mlx-examples/mixtral` convert and save the weights as NumPy arrays so
 MLX can read them:
 
 ```

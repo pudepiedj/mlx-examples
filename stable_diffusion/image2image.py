@@ -174,7 +174,8 @@ def parser():
     args = parser.parse_args()
 
     if args.print_parser:
-        print(args)
+        for k,v in vars(args).items():
+            print(f"{k:>30}:{v}")
 
     return args
 
@@ -219,13 +220,12 @@ if __name__ == "__main__":
         limit = int(args.steps * args.strength)
         for x_t in tqdm(latents, total=limit):
             count += 1
-            mx.simplify(x_t)
-            mx.simplify(x_t)
+            # mx.simplify(x_t)
+            # mx.simplify(x_t)
             mx.eval(x_t)
             if ((count % args.show_denoising == 0) or ((args.save_last_N != 1) and ((limit - count) < args.save_last_N))):
                 x = decode_to_images(x_t, args)
                 save_interim_image(x, limit, count, args)
 
-        x = decode_to_images(x_t, args)
+            x = decode_to_images(x_t, args)
         save_image(x, args)
-
